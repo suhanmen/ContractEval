@@ -47,6 +47,32 @@ The above figure is a running example of PACT with an Example-Augmented Specific
 
 
 ## 📈 Results
+<b>HumanEval+</b></h3>
+
+| Model          | Mode |  pass@1 ↑ |   AVC ↑   |   AAR ↑   |   AAP ↑   |   AVG ↑   |
+| :------------- | :--- | :-------: | :-------: | :-------: | :-------: | :-------: |
+| **gemma-3**    | CS   | **84.41** |   24.85   |   11.41   |   14.04   |   32.79   |
+|                | EAS  |   82.94   | **91.02** | **28.07** | **27.77** | **57.45** |
+| **DeepSeek**   | CS   | **73.78** |   44.12   |   15.65   |   16.97   |   37.63   |
+|                | EAS  |   71.77   | **79.29** | **27.62** | **28.01** | **51.67** |
+| **Qwen3**      | CS   | **78.92** |   28.04   |   13.17   |   22.55   |   35.67   |
+|                | EAS  |   77.83   | **87.81** | **31.53** | **36.09** | **58.31** |
+| **Phi-4-plus** | CS   | **72.23** |   52.91   |   18.78   | **21.09** |   41.25   |
+|                | EAS  |   67.08   | **69.50** | **21.33** |   20.06   | **44.49** |
+
+<b>MBPP+</b></h3>
+
+| Model          | Mode |  pass@1 ↑ |   AVC ↑   |   AAR ↑   |   AAP ↑   |   AVG ↑   |
+| :------------- | :--- | :-------: | :-------: | :-------: | :-------: | :-------: |
+| **gemma-3**    | CS   |   78.56   |   57.99   |   17.50   |   17.93   |   41.49   |
+|                | EAS  | **78.60** | **95.57** | **32.29** | **31.82** | **59.57** |
+| **DeepSeek**   | CS   | **62.53** |   64.20   |   17.59   |   17.57   |   40.47   |
+|                | EAS  |   60.15   | **86.70** | **28.23** | **27.94** | **45.47** |
+| **Qwen3**      | CS   |   72.41   |   70.86   |   21.09   |   22.99   |   46.84   |
+|                | EAS  | **72.63** | **94.85** | **31.54** | **32.30** | **57.83** |
+| **Phi-4-plus** | CS   | **64.89** |   67.33   |   24.26   |   24.65   |   45.28   |
+|                | EAS  |   63.76   | **74.88** | **29.20** | **28.95** | **49.20** |
+
 Our comprehensive evaluation across 4 LLMs (Gemma-3, DeepSeek-R1, Qwen-3, Phi-4-plus) on HumanEval+ and MBPP+ reveals several key findings:
 
 * **Contract-aware test generation** – PACT’s two-stage LLM + SMT solver pipeline produced logically consistent contract-violating test cases (CVTs), achieving an average +12.8 pp improvement in Target Specificity (TS) over direct LLM generation while maintaining high Assert Violation Coverage (AVC). This demonstrates the precision of PACT’s targeted violation generation.
