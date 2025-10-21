@@ -154,7 +154,7 @@ Each script in this stage supports **detailed configuration options** that can b
 
 
 ## 🔖 Citation
-```
+```bibtex
 @misc{lim2025largelanguagemodelsrespect,
       title={Do Large Language Models Respect Contracts? Evaluating and Enforcing Contract-Adherence in Code Generation}, 
       author={Soohan Lim and Joonghyuk Hahn and Hyunwoo Park and Sang-Ki Ko and Yo-Sub Han},
