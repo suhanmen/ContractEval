@@ -100,332 +100,84 @@ You must begin your response with ```json and end it with ```.
 ```
 ----------------------------------------
 """
-########################################################################################################################
-# Not Use functionality test case instruction
 
-INSTRUCTION_10 = """
+CONTRACTS_QUALITY_CHECK = """
 You are an expert program analyst.
 
 I will provide:
-- Method Name: a function or method name that defines the main entry point.
-- prompt: natural language description of the task to solve.
-- canonical_solution: reference code
-- test_cases: existing tests
-
-The current test_cases may not fully cover important corner cases or execution paths.
-Your task is to generate additional, high-quality test cases for the following categories:
-
-1. Boundary Cases — test inputs at the edge of valid ranges (e.g., empty inputs, max length, min values).
-2. Edge Cases — uncommon but valid inputs that may trigger corner behavior.
-3. Invalid Inputs — inputs that violate the expected constraints or types (for robustness testing).
-4. Performance Constraints — inputs that stress time or space limits (e.g., large arrays, deep recursion).
-5. Exception Scenarios — inputs that are expected to raise exceptions or trigger fallback logic.
-6. Line Coverage Targets — inputs designed to execute previously uncovered lines of code.
-7. Branch Coverage Targets — inputs that force each conditional branch to be taken.
-8. Condition Coverage Targets — inputs that explore all possible boolean subconditions within complex expressions.
-9. Function Coverage — ensure that all helper functions in the code are invoked.
-10. Path Coverage (Advanced) — inputs that exercise distinct execution paths through the function.
-
-Ensure that:
-- Each category contains at least one distinct test cases.
-- Test cases do not overlap between categories.
-- You do not duplicate the existing test cases provided.
-- All responses must strictly adhere to the JSON format shown below.
-
-Each test case must include the following fields:
-- input: the argument(s) to pass to the function
-- expected_output: the return value expected from the function
-- explanation: a concise 1–2 sentence justification of why this test case is important and what code behavior or logic it targets
-  """
-
-OUTPUT_INSTRUCTION_10 = """
-----------------------------------------
-Respond in structured JSON format, grouped by each category. For each test case, provide:
-
-{
-  "boundary_cases": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "edge_cases": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "invalid_inputs": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "performance_constraints": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "exception_scenarios": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "line_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify the specific line(s) of code this input is designed to execute>
-    }
-  ],
-  "branch_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify which branch (e.g., if/else, switch-case) this test aims to cover>
-    }
-  ],
-  "condition_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify which boolean subcondition(s) are being exercised>
-    }
-  ],
-  "function_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <mention the helper function or specific method this input is intended to invoke>
-    }
-  ],
-  "path_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <describe the specific control flow path this test is designed to traverse>
-    }
-  ]
-}
-----------------------------------------
-  """
-
-OUTPUT_EX_INSTRUCTION_10 = """
-----------------------------------------
-Respond in structured JSON format, grouped by each category. For each test case, provide:
-
-{
-  "boundary_cases": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "edge_cases": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "invalid_inputs": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "performance_constraints": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "exception_scenarios": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <briefly explain why this case is important and what part of the code it is intended to cover>
-    }
-  ],
-  "line_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify the specific line(s) of code this input is designed to execute>
-    }
-  ],
-  "branch_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify which branch (e.g., if/else, switch-case) this test aims to cover>
-    }
-  ],
-  "condition_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <specify which boolean subcondition(s) are being exercised>
-    }
-  ],
-  "function_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <mention the helper function or specific method this input is intended to invoke>
-    }
-  ],
-  "path_coverage_targets": [
-    {
-      "input": <args>,
-      "expected_output": <return>,
-      "explanation": <describe the specific control flow path this test is designed to traverse>
-    }
-  ]
-}
-
-Example:
-{
-  "boundary_cases": [
-    {
-      "input": [[], 0.5],
-      "expected_output": false,
-      "explanation": "Empty list with threshold 0.5 should return false, covering the base-case early return."
-    }
-  ],
-  "edge_cases": [
-    {
-      "input": [[1, 2, -3], 1],
-      "expected_output": true,
-      "explanation": "List containing a negative value tests absolute-difference logic in a non-trivial scenario."
-    }
-  ],
-  "invalid_inputs": [
-    {
-      "input": ["not a list", 1],
-      "expected_output": null,
-      "explanation": "Non-list first argument should raise a TypeError to validate input type checking."
-    }
-  ],
-  "performance_constraints": [
-    {
-      "input": [list(range(100000)), 0],
-      "expected_output": false,
-      "explanation": "Very large list with threshold 0 stresses time complexity, ensuring performance requirements."
-    }
-  ],
-  "exception_scenarios": [
-    {
-      "input": [[1, 2, 3], -1],
-      "expected_output": null,
-      "explanation": "Negative threshold should trigger a ValueError in argument validation logic."
-    }
-  ],
-  "line_coverage_targets": [
-    {
-      "input": [[1, 1], 1],
-      "expected_output": true,
-      "explanation": "Executes the line that detects identical elements at index pair (0,1)."
-    }
-  ],
-  "branch_coverage_targets": [
-    {
-      "input": [[1, 3, 5], 1],
-      "expected_output": false,
-      "explanation": "Covers the else branch where no two elements are within threshold."
-    }
-  ],
-  "condition_coverage_targets": [
-    {
-      "input": [[1, 2, 4], 3],
-      "expected_output": false,
-      "explanation": "Exercises both subconditions in the combined boolean (abs(a - b) < threshold) check."
-    }
-  ],
-  "function_coverage_targets": [
-    {
-      "input": [[2, 5, 7], 3],
-      "expected_output": true,
-      "explanation": "Invokes the helper function compute_diff to calculate absolute differences."
-    }
-  ],
-  "path_coverage_targets": [
-    {
-      "input": [[0, 2, 4, 6], 2],
-      "expected_output": true,
-      "explanation": "Traverses nested loops fully until early return on first qualifying pair."
-    }
-  ]
-}
-----------------------------------------
-  """
-########################################################################################################################
-# assertion specification
-
-ASSERT_SPECIFICATION = """
-You are an expert program analyst.
-
-I will provide:
-{header_fields}
+- Method Name: the name of the function to test.
+- Problem Description: a natural language description of what the function is supposed to do, including its expected behavior, input constraints (as assertions), and a reference implementation.
+- Code: the canonical solution code.
+- Contract List: a list of input-validation assertions that enforce type, range, and structural constraints before executing the main logic.
 
 Your task is:
-- For **each assertion (contract) in the Contract List**, generate **5 distinct test cases** that intentionally violate **that specific contract**.
-- **Before emitting any JSON, write a very short chain-of-thought wrapped in `<think>…</think>` (3–4 sentences) explaining your overall violation strategy.**
-- Ensure each test case remains functionally meaningful, but is intentionally designed to violate the assertion logic (e.g., incorrect types, invalid ranges, malformed structure).
-- Do not generate duplicate or overlapping test cases across assertions.
-- Assume the goal is to test how well the function enforces input validation via assertions.
+- Review the Problem Description and Code to determine whether each assertion in the Contract List is appropriate and correct for the function.
 
-JSON Rules (STRICT)
-- **Absolutely NO comments** (`// …` or `# …`) and no trailing commas.
-- Use JSON literals only: `null` (not `None`), `true/false` (not `True/False`).
-- Do not output tuples; use lists `[...]` only.
-- input: the **list of arguments** to pass to the function that would trigger the assertion failure.
-- Each test case must strictly follow the ```json ...``` format as shown below.
+- For each assertion in the Contract List, evaluate if it correctly enforces the input constraints based on the Problem Description and Code.
+
+- Return your output as a JSON object.  
+  Each key should be in the format "assert_0", "assert_1", ..., and the value should be:
+  - 1 if the assertion is correct and appropriate
+  - 0 if the assertion is incorrect or inappropriate
 """
 
-OUTPUT_INSTRUCTION_ASSERTIONS = """
+OUTPUT_INSTRUCTION_CONTRACTS_QUALITY_CHECK = """
 ----------------------------------------
-**Before emitting the JSON object, write a very short `<think>…</think>` block (3–4 sentences) with your overall strategy.**
-Respond in structured JSON format, grouped by each assertion being violated.
-For each violated assertion, provide exactly **5** distinct test cases.
-Each test case must be a dictionary containing:
-- "input": list of arguments that would trigger the assertion error.
+Respond in structured JSON format.
 
+You must begin your response with ```json and end it with ```.
 ### Implementation Guidelines
-<think>
-...
-</think>
-
 ```json
 {
-  "assert_0": [
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] }
-  ],
-  "assert_1": [
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] },
-    { "input": [...] }
-  ],
+  "assert_0": 1,
+  "assert_1": 0,
   ...
+}
 ```
 ----------------------------------------
-  """
+"""
+
+NEGATIVE_EXAMPLE = """
+You are an expert program analyst.
+
+I will provide you with:
+- Method Name: the name of the function.
+- Problem Description: a natural language description of what the function is supposed to do, including its expected behavior.
+- Code: the golden label reference code.
+- Test Cases: about three test cases only inputs.
+- Correct Output: the correct output for each test case.
+
+Your task is to generate an intentionally incorrect output for each given test case.
+For each input in the test cases, provide a wrong output that clearly does NOT match the expected/correct output according to the problem description and reference code.
+"""
+
+OUTPUT_INSTRUCTION_NEGATIVE_EXAMPLE = """
+----------------------------------------
+Respond in structured JSON format.
+
+You must begin your response with ```json and end it with ```.
+### Implementation Guidelines
+```json
+{
+  "test_case_0": {
+    "input": <test case input>,
+    "output": <an intentionally incorrect output>
+  },
+  "test_case_1": {
+    "input": <test case input>,
+    "output": <an intentionally incorrect output>
+  },
+  "test_case_2": {
+    "input": <test case input>,
+    "output": <an intentionally incorrect output>
+  }
+}
+```
+----------------------------------------
+"""
+
+########################################################################################################################
+# assertion specification
 
 MULTI_ASSERT_SPECIFICATION = """
 You are an expert program analyst.
@@ -511,14 +263,6 @@ Each test case must be a dictionary containing:
 ```
 ----------------------------------------
 """
-
-ASSERT_SPECIFICATION = ASSERT_SPECIFICATION.format(
-  header_fields="""
-- Method Name: the name of the function to test.
-- Problem Description: a natural language description of what the function is supposed to do, including its expected behavior, input constraints (as assertions), and a reference implementation.
-- Contract List: a list of input validation conditions written as assertions that enforce type, range, and structural constraints before executing the main logic.
-  """
-)
 
 MULTI_ASSERT_SPECIFICATION = MULTI_ASSERT_SPECIFICATION.format(
   header_fields="""
@@ -635,86 +379,44 @@ I will declare input `values` as a Value type, then encode each Python assert as
 '''
 
 ########################################################################################################################
-# functionality specification
-
-FUNCTIONALITY_SPECIFICATION = """
+# base code generation instruction
+BASE_CODE_GENERATION = """
 You are an expert program analyst.
-
 I will provide:
-{header_fields}
+  - Method Name: the name of the function to test.
+  - Problem Description: a one-sentence description of what the function is supposed to do, followed by one or more example assertions.
 
 Your task is:
-- Generate additional test cases that **fully satisfy all assertion conditions in the Contract List**.
-– Before emitting any JSON, write a very short chain-of-thought wrapped in <think>…</think> (3–4 sentences) explaining your overall functional testing strategy.**
-– All inputs must be valid according to the given contracts; do not include any inputs that would trigger an assertion failure.
-- Focus on **testing the core functionality**, not input validation or invalid inputs.
-- Each test case must be valid and should help **evaluate the correctness of the main logic** of the function.
-
-Design exactly **one test case for each of the following categories**:
-1. boundary_and_edge_case — inputs at the edge of valid ranges (e.g., empty list, minimal valid nesting, only spaces, etc.)
-2. complex_corner_case — rare or subtle combinations of valid inputs that may stress internal state or sequencing logic
-3. performance_stress_case — large, deeply nested, or computationally heavy but still valid input strings
-4. logic_coverage — inputs designed to trigger unusual or less commonly used logical paths
-5. functional_path_coverage — inputs that explicitly activate specific internal condition paths (e.g., appending to results, skipping whitespace, etc.)
-
-JSON Rules (STRICT)
-- **Absolutely NO comments** (`// …` or `# …`) and no trailing commas.
-- Use JSON literals only: `null` (not `None`), `true/false` (not `True/False`).
-- Do not output tuples; use lists `[...]` only.
-- input: the **list of arguments** to pass to the function that would trigger the assertion failure.
-
-Each test case must include the following fields:
-- category: one of ['boundary_and_edge_case', 'complex_corner_case', 'performance_stress_case', 'logic_coverage', 'functional_path_coverage']
-- input: a list containing the single argument to the function (must be a valid string that satisfies all contract assertions)
+  1. Read the problem description carefully and infer appropriate arguments for the function.
+  2. Write a correct implementation that:
+    - Satisfies the described behavior
+  3. Do not change the function name.
 """
 
-OUTPUT_INSTRUCTION_FUNCTIONALITY = """
-----------------------------------------
-**Before emitting the JSON object, write a very short `<think>…</think>` block (3–4 sentences) with your overall strategy.**
-Respond in structured JSON format, grouped by each category. Provide exactly one test case per category.
-Each category must include:
-- "input": a list of valid arguments to be passed to the function (must satisfy all assertions)
-Each test case must strictly follow the ```json ...``` format as shown below.
+OUTPUT_INSTRUCTION_BASE_CODE_GENERATION = """
+**Output**
+- Before emitting the JSON object, write a very short `<think>…</think>` block (maximum 2 sentences, no more than 30 words) describing your strategy.
+Then, you must return a valid JSON object containing the Python code inside the `"code"` field.
+- The JSON block is mandatory even if you're unsure. You must always produce code. Never omit it.
 
-### Implementation Guidelines
+### Output Example
 <think>
-...
+I will read the problem description and infer appropriate arguments for the function. Then I implement the logic to satisfy the problem description.
 </think>
 
 ```json
 {
-  "boundary_and_edge_case": {
-    "input": [...]
-  },
-  "complex_corner_case": {
-    "input": [...]
-  },
-  "performance_stress_case": {
-    "input": [...]
-  },
-  "logic_coverage": {
-    "input": [...]
-  },
-  "functional_path_coverage": {
-    "input": [...]
-  }
+  "code": '''
+  ...
+  '''
 }
 ```
-----------------------------------------
 """
 
-FUNCTIONALITY_SPECIFICATION = FUNCTIONALITY_SPECIFICATION.format(
-  header_fields="""
-- Method Name: the name of the function to test.
-- Problem Description: a natural language description of what the function is supposed to do, including its expected behavior, input constraints (as assertions), and a reference implementation.
-- Contract List: a list of input validation conditions written as assertions that enforce type, range, and structural constraints before executing the main logic.
-  """
-)
 ########################################################################################################################
 # FS: functionality specification, CS: contracts specification
 # FT: functionality test case, CT: contracts test case
 
-# code generation instruction
 CODE_GENERATION_CS = """
 You are an expert program analyst.
 I will provide:
@@ -728,10 +430,6 @@ Your task is:
     - Passes all provided examples
     - If the problem includes input constraints, you may enforce them using assert statements.
   3. Do not change the function name.
-
-**Output** 
-  - Return ONLY the code block. Do not include any other text or explanation.
-  ```
 """
 
 CODE_GENERATION_CT = """
@@ -741,6 +439,7 @@ I will provide:
   - Method Name: the name of the function to implement.
   - Problem Description: a one-sentence description of what the function is supposed to do.
   - Functionality Test Cases: valid examples that the function must pass in problem description.
+  - Contract List: assertion-based input validation conditions that must be enforced.
   - Contract Test Cases: invalid inputs that must be rejected using appropriate input validation logic (e.g., assert statements).
 
 Your task is:
@@ -753,62 +452,123 @@ Your task is:
     - Enforces input constraints using assert statements or precondition checks.
   5. Do not change the function name.
   6. Do not return test code or any explanation.
-
-**Output**
-  - Return ONLY the code block. Do not include any other text or explanation.
 """
 
-########################################################################################################################
-# code refinement instruction
-CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CS = """
+NEGATIVE_EXAMPLE_WITH_BASE = """
+You are an expert program analyst.
+
+I will provide:
+  - Method Name: the name of the function to implement.
+  - Problem Description: a one-sentence description of what the function is supposed to do.
+  - Functionality Test Cases: valid examples that the function must pass in problem description.
+  - Negative Examples: inputs and incorrect outputs.
+
+Your task is:
+  1. Carefully read the problem description.
+  2. Analyze the functionality test cases to understand the expected behavior.
+  3. Analyze the negative examples to infer the incorrect outputs.
+  4. Do not change the function name.
+  5. Do not return test code or any explanation.
+"""
+
+NEGATIVE_EXAMPLE_WITH_CS = """
 You are an expert program analyst.
 
 I will provide:
   - Method Name: the name of the function to test.
-  - Problem Description: a short description of what the function is supposed to do.
-  - Code: the original function implementation.
-  - Constraints: one or more natural language constraints that must be enforced before the main logic runs.
-
+  - Problem Description: a one-sentence description of what the function is supposed to do, followed by one or more example assertions.
+  - Functionality Test Cases: valid examples that the function must pass in problem description.
+  - Negative Examples: inputs and incorrect outputs.
+  
 Your task is:
-1. Carefully read the natural language constraints.
-2. Modify the provided function code by inserting appropriate input-validation logic that enforces all given constraints.
-  - If a constraint can be checked at runtime, use Python `assert` statements.
-  - If a constraint requires logic beyond `assert`, implement additional conditionals or pre-checks as needed.
-  - **If there are multiple constraints, implement them in the exact order they are given (0, 1, 2, ...).**
-3. Do not change the function name.
-4. Do not alter any behavior unrelated to the constraints.
-5. Ensure the final code satisfies both the original description and the added constraints.
-
-Return only the updated code inside a ```json fenced code block.
+  1. Carefully read the problem description.
+  2. Analyze the functionality test cases to understand the expected behavior.
+  3. Analyze the negative examples to infer the incorrect outputs.
+  4. Do not change the function name.
+  5. Do not return test code or any explanation.
 """
 
-CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CT = """
+CODE_GENERATION_CS_Multi_turn = """
 You are an expert program analyst.
 
 I will provide:
   - Method Name: the name of the function to test.
-  - Problem Description: a short description of what the function is supposed to do.
+  - Problem Description: a one-sentence description of what the function is supposed to do, followed by one or more example assertions.
   - Code: the original function implementation.
-  - Contract Test Cases: one or more example inputs that violate expected constraints. These test cases trigger assertion errors and should not be accepted by a correct implementation.
 
 Your task is:
-1. Carefully analyze the provided contract test cases and infer the underlying input constraints they are testing.
-2. Modify the provided function code by inserting appropriate input-validation logic that rejects these invalid inputs.
-  - If a constraint can be checked at runtime, use Python `assert` statements to enforce it.
-  - If a constraint requires logic beyond `assert`, implement additional conditionals or pre-checks as needed.
-  - **If multiple violations are implied, handle each case explicitly and in the order they appear.**
-3. Do not change the function name.
-4. Do not alter any behavior unrelated to enforcing the inferred constraints.
-5. Ensure the final code passes the valid examples and raises `AssertionError` for all provided contract test cases.
+  1. Carefully analyze the provided code and infer the underlying input constraints it is testing.
+  2. Modify the provided function code by inserting appropriate input-validation logic that rejects these invalid inputs.
+    - If a constraint can be checked at runtime, use Python `assert` statements to enforce it.
+    - If a constraint requires logic beyond `assert`, implement additional conditionals or pre-checks as needed.
+    - **If multiple constraints are implied, handle each case explicitly and in the order they appear.**
+  5. Do not change the function name.
+  6. Do not alter any behavior unrelated to enforcing the inferred constraints.
+  7. Ensure the final code maintains the original functionality while enforcing the inferred constraints.
+"""
 
-Return only the updated code inside a ```json fenced code block.
+CODE_GENERATION_CT_Multi_turn = """
+You are an expert program analyst.
+
+I will provide:
+  - Method Name: the name of the function to implement.
+  - Problem Description: a one-sentence description of what the function is supposed to do.
+  - Code: the original function implementation.
+  - Contract List: assertion-based input validation conditions that must be enforced.
+  - Contract Test Cases: invalid inputs that must be rejected using appropriate input validation logic (e.g., assert statements).
+
+Your task is:
+  1. Carefully read the problem description.
+  2. Analyze the original function implementation to understand the expected behavior.
+  3. Analyze the contract test cases to infer input constraints that must be enforced.
+  4. Modify the original function implementation by inserting appropriate input-validation logic that rejects these invalid inputs by raising an AssertionError.
+    - If a constraint can be checked at runtime, use Python `assert` statements.
+    - If a constraint requires logic beyond `assert`, implement additional conditionals or pre-checks as needed.
+    - **If multiple violations are implied, handle each case explicitly and in the order they appear.**
+  5. Do not change the function name.
+  6. Do not alter any behavior unrelated to enforcing the inferred constraints.
+  7. Ensure the final code maintains the original functionality while raising `AssertionError` for all provided contract test cases.
+"""
+
+
+CODE_GENERATION_CS_Two_turn = """
+You are an expert program analyst.
+
+I will provide:
+  - Method Name: the name of the function to implement.
+  - Problem Description: a one-sentence description of what the function is supposed to do.
+
+Your task is:
+  1. Carefully read the problem description and use it to infer the necessary input constraints (i.e., contracts) that should be enforced for this function.
+  2. Based only on your understanding of the problem description, determine what contracts or input validation are needed.
+  3. Generate these contracts, using Python `assert` statements or other suitable precondition checks.
+    - Use an `assert` if a constraint can be checked at runtime.
+    - If more logic is required, implement it explicitly.
+    - If multiple constraints are required, implement each one explicitly, following the logical order inferred from the problem description.
+"""
+
+CODE_GENERATION_CT_Two_turn = """
+You are an expert program analyst.
+
+I will provide:
+  - Method Name: the name of the function to implement.
+  - Problem Description: a one-sentence description of what the function is supposed to do.
+  - Contract List: assertion-based input validation conditions that must be enforced.
+  - Contract Test Cases: invalid inputs that must be rejected using appropriate input validation logic (e.g., assert statements).
+
+Your task is:
+  1. Carefully analyze the provided contract test cases and infer the underlying input constraints they are testing.
+    - If a constraint can be checked at runtime, use Python `assert` statements to enforce it.
+    - If a constraint requires logic beyond `assert`, implement additional conditionals or pre-checks as needed.
+    - **If multiple violations are implied, handle each case explicitly and in the order they appear.**
+  2. Write the contract code that raises `AssertionError` for all provided contract test cases.
 """
 
 OUTPUT_INSTRUCTION_CODE_GENERATION = """
-----------------------------------------
-**Before emitting the JSON object, write a very short `<think>…</think>` block (maximum 2 sentences, no more than 30 words) describing your strategy.**
+**Output**
+- Before emitting the JSON object, write a very short `<think>…</think>` block (maximum 2 sentences, no more than 30 words) describing your strategy.
 Then, you must return a valid JSON object containing the Python code inside the `"code"` field.
-**The JSON block is mandatory — even if you're unsure, you must always produce code. Never omit it.**
+- The JSON block is mandatory even if you're unsure. You must always produce code. Never omit it.
 
 ### Output Example
 <think>
@@ -822,7 +582,69 @@ I will parse the example assertions to infer argument types and constraints. The
   '''
 }
 ```
+"""
+
+OUTPUT_INSTRUCTION_BASE_PROMPT_WITH_CVT = """
+**Output**
+- You must return a valid JSON object containing the Python code inside the `"code"` field.
+- The JSON block is mandatory even if you're unsure. You must always produce code. Never omit it.
+
+### Output Example
+```json
+{
+  "code": '''
+  ...
+  '''
+}
+```
+"""
+
+OUTPUT_INSTRUCTION_CODE_GENERATION_SFT = """
 ----------------------------------------
+Return ONLY the code. Do not include any other text, explanation, or code block markers.
+
+Output: 
+"""
+
+OUTPUT_INSTRUCTION_CODE_GENERATION_Multi_turn = """
+----------------------------------------
+**Before emitting the JSON object, write a very short `<think>…</think>` block (maximum 2 sentences, no more than 30 words) describing your step-by-step strategy.**
+Then, you must return a valid JSON object containing the Python code inside the `"code"` field.
+**The JSON block is mandatory — even if you're unsure, you must always produce code. Never omit it.**
+
+### Output Example
+<think>
+Step 1: I will parse the example assertions to infer argument types and constraints. Step 2: Then I implement the logic to satisfy all examples.
+</think>
+```json
+{
+  "code": '''
+  ...
+  '''
+}
+```
+----------------------------------------
+"""
+
+OUTPUT_INSTRUCTION_CODE_GENERATION_Two_turn = """
+**Before emitting the JSON object, write a very short `<think>…</think>` block (maximum 2 sentences, no more than 30 words) describing your step-by-step strategy.**
+You will be given a list of contract names. For each contract name in the list, implement the required Python code as the value.  
+Return a valid JSON object containing your implementations in the `"code"` field, using the contract names as keys.  
+**The JSON block is mandatory — even if you're unsure, you must always produce code. Never omit it.**
+
+### Output Example
+<think>
+For each contract name in the provided list, I will implement its corresponding Python code using the descriptions and constraints.
+</think>
+```json
+{
+  "code": {
+    "assert_0": "assert isinstance(x, int) \"invalid inputs\"",
+    "assert_1": "assert isinstance(y, int) \"invalid inputs\"",
+    ...
+  }
+}
+```
 """
 
 
@@ -1107,17 +929,6 @@ Briefly explain your approach (2-3 sentences). Example: "I will analyze the Pyth
 ----------------------------------------
 """
 
-GRAMMAR_FUNCTIONALITY_SPECIFICATION = """
-You are an expert program analyst specializing in formal verification and SMT-LIB v2 specification.
-
-Goal
-- Produce SMT-LIB v2 specifications that generate functionally valid inputs (i.e., all contracts hold) for three scenarios:
-  1) boundary_and_edge_case — hit contract-implied minima/maxima or exact anchors while staying valid.
-  2) complex_corner_case — realize rare but valid combinations (two+ independent tight constraints and/or uncommon structural/value patterns).
-  3) performance_stress_case — maximize workload (size/nesting/pattern complexity) under explicit safety caps, while satisfying all contracts.
-"""
-
-
 HUMANEVAL_ASSERT_ADT_EXAMPLE = '''
 Method: safe_divide
 Problem Description:
@@ -1205,19 +1016,12 @@ def instruction_template(which, **kwargs):
     return MBPP_MASK_STRING, OUTPUT_INSTRUCTION_MASK_STRING
   elif which == "INDIVIDUAL_MASK_STRING":
     return INDIVIDUAL_MASK_STRING, OUTPUT_INSTRUCTION_INDIVIDUAL_MASK_STRING
+  elif which == "CONTRACTS_QUALITY_CHECK":
+    return CONTRACTS_QUALITY_CHECK, OUTPUT_INSTRUCTION_CONTRACTS_QUALITY_CHECK
+  elif which == "NEGATIVE_EXAMPLE":
+    return NEGATIVE_EXAMPLE, OUTPUT_INSTRUCTION_NEGATIVE_EXAMPLE
   
   # test case instruction
-  elif which == "INSTRUCTION_10":
-    return INSTRUCTION_10, OUTPUT_INSTRUCTION_10
-  elif which == "EX-INSTRUCTION_10":
-    return INSTRUCTION_10, OUTPUT_EX_INSTRUCTION_10
-
-  elif which == "FUNCTIONALITY_SPECIFICATION":
-    return FUNCTIONALITY_SPECIFICATION, OUTPUT_INSTRUCTION_FUNCTIONALITY
-
-  elif which == "ASSERT_SPECIFICATION":
-    return ASSERT_SPECIFICATION, OUTPUT_INSTRUCTION_ASSERTIONS
-  
   elif which == "MULTI_ASSERT_SPECIFICATION":
     return MULTI_ASSERT_SPECIFICATION, MULTI_OUTPUT_INSTRUCTION_ASSERTIONS
   elif which == "MULTI_ASSERT_SPECIFICATION_humaneval": # ONE SHOT
@@ -1227,23 +1031,27 @@ def instruction_template(which, **kwargs):
   
   elif which == "GRAMMAR_ASSERT_SPECIFICATION":
     return GRAMMAR_ASSERT_SPECIFICATION.format(STRICT_RULES=STRICT_RULES), GRAMMAR_ASSERT_OUTPUT_INSTRUCTION.format(ADT_BASE_TEMPLATE=ADT_BASE_TEMPLATE, ADT_OUTPUT_FORMAT=ADT_ASSERT_OUTPUT_FORMAT)
-  elif which == "GRAMMAR_ASSERT_SPECIFICATION_humaneval": # ONE SHOT
+  
+  elif which == "GRAMMAR_ASSERT_SPECIFICATION_humaneval":
     return GRAMMAR_ASSERT_SPECIFICATION.format(STRICT_RULES=STRICT_RULES), GRAMMAR_ASSERT_OUTPUT_INSTRUCTION.format(ADT_BASE_TEMPLATE=ADT_BASE_TEMPLATE, ADT_OUTPUT_FORMAT=ADT_ASSERT_OUTPUT_FORMAT) + HUMANEVAL_ASSERT_ADT_EXAMPLE
-  elif which == "GRAMMAR_ASSERT_SPECIFICATION_mbpp": # ONE SHOT
+  
+  elif which == "GRAMMAR_ASSERT_SPECIFICATION_mbpp":
     return GRAMMAR_ASSERT_SPECIFICATION.format(STRICT_RULES=STRICT_RULES), GRAMMAR_ASSERT_OUTPUT_INSTRUCTION.format(ADT_BASE_TEMPLATE=ADT_BASE_TEMPLATE, ADT_OUTPUT_FORMAT=ADT_ASSERT_OUTPUT_FORMAT) + MBPP_ASSERT_ADT_EXAMPLE
   
-  
+  # base code generation instruction
+  elif which == "BASE_CODE_GENERATION":
+    return BASE_CODE_GENERATION, OUTPUT_INSTRUCTION_BASE_CODE_GENERATION
   
   # code generation instruction
   elif which == "CODE_GENERATION_CS":
     return CODE_GENERATION_CS, OUTPUT_INSTRUCTION_CODE_GENERATION
   elif which == "CODE_GENERATION_CT":
     return CODE_GENERATION_CT, OUTPUT_INSTRUCTION_CODE_GENERATION
-
-  # code refinement instruction
-  elif which == "CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CS":
-    return CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CS, OUTPUT_INSTRUCTION_CODE_GENERATION
-  elif which == "CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CT":
-    return CODE_REFINEMENT_WITH_INSTRUCTIONS_FC_CT, OUTPUT_INSTRUCTION_CODE_GENERATION
+  
+  elif which == "CODE_GENERATION_CT_CoT":
+    return CODE_GENERATION_CT, OUTPUT_INSTRUCTION_CODE_GENERATION
+  
+  elif which == "CODE_GENERATION_CT_Multi_turn":
+    return CODE_GENERATION_CT_Multi_turn, OUTPUT_INSTRUCTION_CODE_GENERATION_Multi_turn
   else:
     raise ValueError(f"Unknown instruction type: {which}")

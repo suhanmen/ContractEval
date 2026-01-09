@@ -1,4 +1,4 @@
-name: PACT
+name: ContractEval
 channels:
   - defaults
 dependencies:
@@ -124,4 +124,4 @@ dependencies:
       - yarl==1.20.1
       - z3==0.2.0
       - z3-solver==4.15.3.0
-prefix: /home/imsuhan22/anaconda3/envs/PACT
+prefix: /home/imsuhan22/anaconda3/envs/ContractEval

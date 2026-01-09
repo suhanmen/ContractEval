@@ -1,14 +1,14 @@
-# Do large language models respect contracts? Evaluating and enforcing contract-adherence in code generation
+# ContractEval: A Benchmark for Evaluating Contract-Satisfying Assertions in Code Generation
 
 <p align="center">
-  <a href="https://github.com/suhanmen/PACT/stargazers">
-    <img src="https://img.shields.io/github/stars/suhanmen/PACT?style=social" alt="GitHub Repo stars">
+  <a href="https://github.com/suhanmen/ContractEval/stargazers">
+    <img src="https://img.shields.io/github/stars/suhanmen/ContractEval?style=social" alt="GitHub Repo stars">
   </a>
-  <a href="https://github.com/suhanmen/PACT/commits/main">
-    <img src="https://img.shields.io/github/last-commit/suhanmen/PACT" alt="GitHub last commit">
+  <a href="https://github.com/suhanmen/ContractEval/commits/main">
+    <img src="https://img.shields.io/github/last-commit/suhanmen/ContractEval" alt="GitHub last commit">
   </a>
-  <a href="https://github.com/suhanmen/PACT/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/suhanmen/PACT?color=orange" alt="GitHub contributors">
+  <a href="https://github.com/suhanmen/ContractEval/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/suhanmen/ContractEval?color=orange" alt="GitHub contributors">
   </a>
 </p>
 
@@ -18,68 +18,73 @@
 
 
 ## 📰 News
-- 📢 NEW! **"Do large language models respect contracts? Evaluating and enforcing contract-adherence in code generation"** is now on arXiv. (Oct 14, 2025)
-- 📢 NEW! The official **PACT** framework has been released on GitHub. (Oct 14, 2025)
+- 📢 NEW! **"ContractEval: A Benchmark for Evaluating Contract-Satisfying Assertions in Code Generation"** has been updated on arXiv. (jan 8, 2026)
+- 📢 NEW! The official **ContractEval** Benchmark has been released on GitHub. (jan 8, 2026)
 
 ## 🔍 Motivation
 <p align="center">
-  <img src="figures/motivation.png" alt="Motivation Figure" width="60%">
+  <img src="figures/motivation.png" alt="Motivation Figure" width="100%">
 </p>
 
-Large Language Models can generate working code—but can they generate safe code? **PACT** goes beyond pass@k accuracy to ask a deeper question: “Does the model respect the rules of the program?” By testing how models handle invalid inputs and preconditions, PACT reveals hidden weaknesses in current benchmarks and provides a new standard for contract-aware code evaluation.
+Large Language Models can generate working code—but can they generate safe code? **ContractEval** goes beyond pass@k accuracy to ask a deeper question: “Does the model respect the rules of the program?” By testing how models handle invalid inputs and preconditions, ContractEval reveals hidden weaknesses in existing benchmarks and provides a new standard for contract-aware code evaluation.
 
-## ✨ About PACT
-**PACT** is a novel framework for evaluating and enhancing contract adherence in LLM-generated code.
-Unlike traditional benchmarks that measure only *functional correctness* through *pass@k* on well-formed inputs, PACT systematically assesses whether generated programs respect preconditions and input validation rules (contracts).
-
-It extends HumanEval+ and MBPP+ with contract-violating test suites, enabling a more complete view of model robustness.
-Through **SMT-based test generation** and **contract-adherence metrics**, PACT offers the first principled framework for measuring how reliably LLMs enforce contracts in code generation.
+## ✨ About ContractEval
+<p align="center">
+  <img src="figures/overview.png" alt="overview Figure" width="100%">
+</p>
 
 
-The above figure is a running example of PACT with an Example-Augmented Specification (EAS) prompt, which integrates Contract Specification (CS) and contract-violating test cases (CVTs) to enforce contract-aware code generation.
+**ContractEval** is a novel benchmark for evaluating contract adherence in LLM-generated code.
+Unlike traditional benchmarks that measure only *functional correctness* through *pass@k* on well-formed inputs, ContractEval systematically assesses whether generated programs respect preconditions and input validation rules (contracts).
 
-## 🚀 What makes PACT valuable?
-✅ **Introduces contract awareness as a new evaluation perspective** – PACT shifts the focus from pure *functional correctness* to whether LLMs understand and respect **contracts**,  such as preconditions and input constraints.  
+ContractEval extends HumanEval+ and MBPP+ with contract-violating test suites, enabling a more complete view of model robustness.
+Through **SMT-based test generation** and **contract-adherence metrics**, ContractEval provides the first principled benchmark for measuring how reliably LLMs enforce contracts in code generation.
 
-✅ **Defines novel and interpretable metrics for contract adherence** – PACT introduces four new metrics — **AVC**, **TS**, **AAR**, and **AAP** —  to rigorously measure how well models detect and enforce contracts in both test generation and code generation.  
+The above figure provides an overview of ContractEval, which integrates contract-aware queries, functional tests, and contract-violating test cases.
 
-✅ **Reveals hidden weaknesses in current benchmarks** – Through systematic experiments on **HumanEval+** and **MBPP+**, PACT uncovers that many “functionally correct” programs fail to enforce basic contracts, and demonstrates how contract-violating test cases substantially improve robustness.
+## 🚀 What makes ContractEval valuable?
+✅ **Introduces contract awareness as a new evaluation perspective** – ContractEval shifts the focus from pure *functional correctness* to whether LLMs understand and respect **contracts**, such as preconditions and input constraints.  
+
+✅ **Defines novel and interpretable metrics for contract adherence** – ContractEval introduces new metrics — **AVC** and **TS** for test case generation, and **CSR** for code generation — to rigorously measure how well models detect and enforce contracts in both test generation and code generation.  
+
+✅ **Reveals hidden weaknesses in existing benchmarks** – Through systematic experiments on **HumanEval+** and **MBPP+**, ContractEval uncovers that many “functionally correct” programs fail to enforce basic contracts, and demonstrates how contract-violating test cases substantially improve robustness.
 
 
 ## 📈 Results
-<b>HumanEval+</b></h3>
+<b>Comparison of contract-violating test cases generated by o4-mini and by ContractEval (ours)</b></h3>
 
-| Model          | Mode |  pass@1 ↑ |   AVC ↑   |   AAR ↑   |   AAP ↑   |   AVG ↑   |
-| :------------- | :--- | :-------: | :-------: | :-------: | :-------: | :-------: |
-| **gemma-3**    | CS   | **84.41** |   24.85   |   11.41   |   14.04   |   32.79   |
-|                | EAS  |   82.94   | **91.02** | **28.07** | **27.77** | **57.45** |
-| **DeepSeek**   | CS   | **73.78** |   44.12   |   15.65   |   16.97   |   37.63   |
-|                | EAS  |   71.77   | **79.29** | **27.62** | **28.01** | **51.67** |
-| **Qwen3**      | CS   | **78.92** |   28.04   |   13.17   |   22.55   |   35.67   |
-|                | EAS  |   77.83   | **87.81** | **31.53** | **36.09** | **58.31** |
-| **Phi-4-plus** | CS   | **72.23** |   52.91   |   18.78   | **21.09** |   41.25   |
-|                | EAS  |   67.08   | **69.50** | **21.33** |   20.06   | **44.49** |
+| Method              |   AVC (↑)  |   TS (↑)   | Average (↑) |
+| :------------------ | :--------: | :--------: | :---------: |
+| o4-mini             | **97.58%** |   72.69%   |    85.13%   |
+| ContractEval (ours) |   94.11%   | **84.92%** |  **89.52%** |
 
-<b>MBPP+</b></h3>
+<b>Functional correctness and contract satisfaction in code generation</b></h3>
 
-| Model          | Mode |  pass@1 ↑ |   AVC ↑   |   AAR ↑   |   AAP ↑   |   AVG ↑   |
-| :------------- | :--- | :-------: | :-------: | :-------: | :-------: | :-------: |
-| **gemma-3**    | CS   |   78.56   |   57.99   |   17.50   |   17.93   |   41.49   |
-|                | EAS  | **78.60** | **95.57** | **32.29** | **31.82** | **59.57** |
-| **DeepSeek**   | CS   | **62.53** |   64.20   |   17.59   |   17.57   |   40.47   |
-|                | EAS  |   60.15   | **86.70** | **28.23** | **27.94** | **45.47** |
-| **Qwen3**      | CS   |   72.41   |   70.86   |   21.09   |   22.99   |   46.84   |
-|                | EAS  | **72.63** | **94.85** | **31.54** | **32.30** | **57.83** |
-| **Phi-4-plus** | CS   | **64.89** |   67.33   |   24.26   |   24.65   |   45.28   |
-|                | EAS  |   63.76   | **74.88** | **29.20** | **28.95** | **49.20** |
+| Model           | Instruction |  pass@1 (↑)  |    CSR (↑)   | CodeBLEU (↑) | LLM-as-judge (↑) |
+| :-------------- | :---------- | :--------: | :--------: | :--------: | :------------: |
+| **DeepSeek-R1** | Standard    | **80.81%** |    0.00%   |    0.00%   |      0.00%     |
+|                 | CS          |   73.29%   |   27.24%   |   34.29%   |     53.05%     |
+|                 | EAS         |   70.87%   | **52.66%** | **54.51%** |   **81.49%**   |
+| **gemma-3**     | Standard    | **81.76%** |    0.00%   |    0.00%   |      0.00%     |
+|                 | CS          |   74.75%   |   22.69%   |   29.97%   |     41.74%     |
+|                 | EAS         |   69.56%   | **48.54%** | **48.88%** |   **72.04%**   |
+| **Phi-4**       | Standard    | **75.39%** |    0.00%   |    0.00%   |      0.00%     |
+|                 | CS          |   71.29%   |   40.71%   |   46.66%   |     69.33%     |
+|                 | EAS         |   72.99%   | **50.73%** | **50.86%** |   **75.63%**   |
+| **Phi-4-plus**  | Standard    | **75.97%** |    0.00%   |    0.00%   |      0.00%     |
+|                 | CS          |   70.83%   |   38.24%   |   44.38%   |     65.31%     |
+|                 | EAS         |   73.21%   | **50.94%** | **51.04%** |   **75.98%**   |
+| **Qwen-3**      | Standard    | **74.79%** |    0.00%   |    0.00%   |      0.00%     |
+|                 | CS          |   70.62%   |   24.29%   |   35.05%   |     49.71%     |
+|                 | EAS         |   69.65%   | **51.83%** | **53.30%** |   **77.27%**   |
 
-Our comprehensive evaluation across 4 LLMs (Gemma-3, DeepSeek-R1, Qwen-3, Phi-4-plus) on HumanEval+ and MBPP+ reveals several key findings:
+Our comprehensive evaluation across 5 LLMs (DeepSeek-R1, gemma-3, Phi-4, Phi-4-plus, Qwen-3) on HumanEval+ and MBPP+ reveals several key findings:
 
-* **Contract-aware test generation** – PACT’s two-stage LLM + SMT solver pipeline produced logically consistent contract-violating test cases (CVTs), achieving an average +12.8 pp improvement in Target Specificity (TS) over direct LLM generation while maintaining high Assert Violation Coverage (AVC). This demonstrates the precision of PACT’s targeted violation generation.
+* **Contract-aware test generation** – ContractEval’s two-stage LLM + SMT solver pipeline produces logically consistent contract-violating test cases (CVTs), achieving a +12.23 pp improvement in Target Specificity (TS) over direct LLM generation (o4-mini) while maintaining high Assert Violation Coverage (AVC). This demonstrates the precision of ContractEval’s targeted violation generation approach.
 
-* **Prompting strategy matters** – Augmenting the Contract Specification (CS) prompt with CVTs (Example-Augmented Specification, EAS) boosted contract adherence metrics by +33.7 pp (AVC), +11.6 pp (AAR), and +9.9 pp (AAP) on average. Concrete examples help LLMs explicitly learn how to enforce contracts.
+* **Prompting strategy matters** – Augmenting the Contract Specification (CS) prompt with CVTs (Example-Augmented Specification, EAS) boosted contract satisfaction rate (CSR) by an average of +20.3 pp across all models. Concrete examples help LLMs explicitly learn how to enforce contracts.
 
-* **Trade-off with functional correctness** – While EAS substantially improves contract robustness, it induces a slight drop in pass@1 for well-formed inputs. This reflects a core tension between functional accuracy and robust contract enforcement.
+* **The importance of contract awareness** – Our results reveal a critical gap: Standard prompting achieves high pass@1 scores (74.79%–81.76%) but completely fails to enforce contracts (CSR: 0.00% across all models). In contrast, contract-aware prompting (EAS) achieves substantial contract satisfaction (CSR: 48.54%–52.66%) while maintaining reasonable functional correctness (pass@1: 69.56%–73.21%). This demonstrates that contract enforcement is a distinct dimension of code quality that must be explicitly evaluated and optimized, rather than being assumed to emerge from functional correctness alone.
 
 For detailed quantitative results and case analyses, please refer to our paper.
 
@@ -92,21 +97,21 @@ The datasets used in this research are available in the data/ directory:
 
 
 ## ⚡ Quickstart
-The following scripts guide you through running PACT step by step:
+The following scripts guide you through running ContractEval step by step:
 
 ### **Step 1: Clone the Repository**
 ~~~shell
-git clone https://github.com/suhanmen/PACT.git
-cd PACT
+git clone https://github.com/suhanmen/ContractEval.git
+cd ContractEval
 ~~~
 
-### **Step 2: Set up the enviroment**
+### **Step 2: Set up the environment**
 ~~~shell
 conda env create --file setting/environment.yaml
-conda activate PACT
+conda activate ContractEval
 ~~~
 
-### **Step 3: CVTs Genration**
+### **Step 3: CVTs Generation**
 ~~~shell
 ### STEP 1: Generation
 sh ./scripts/generation_gpt/gpt_main.sh
@@ -116,12 +121,12 @@ sh ./scripts/generation_gpt/gpt_main.sh
 sh ./scripts/utils/inference_parsing.sh
 
 ### STEP 3: SMT Solver
-sh ./scripts/utils/grammar_smt_tool.sh
+sh ./scripts/utils/grammar_smt_tool_gpt_format.sh
 
 ### STEP 4: Evaluation (pass@k)
 sh ./scripts/utils/evaluation_test_case_pass_k.sh
 
-### STEP 5: Evaluation (our metric)
+### STEP 5: Evaluation (our CVTs)
 sh ./scripts/utils/evaluation_test_case_pass_k_for_grammar.sh
 ~~~
 This stage executes the full **contract-violating test-case (CVT) generation and evaluation pipeline**.  
@@ -130,7 +135,7 @@ Each script performs the following functions:
 - **Parsing:** Converts the raw model outputs into a standardized JSON format.  
 - **SMT Solver:** Validates the logical consistency of generated cases using the **Z3 solver**.  
 - **Evaluation (pass@k):** Measures baseline functional correctness of the generated tests.  
-- **Evaluation (our metric):** Computes **AVC** and **TS**, the proposed metrics for evaluating the quality of contract-violating test cases.  
+- **Evaluation (our CVTs):** Computes **AVC** (Assert Violation Coverage) and **TS** (Target Specificity), the proposed metrics for evaluating the quality of contract-violating test cases.  
 
 Each script in this stage supports **detailed configuration options** that can be adjusted within the corresponding shell files.
 
@@ -143,16 +148,17 @@ sh ./scripts/generation_test_case_or_code_generation/main.sh
 ### STEP 2: Evaluation (code generation)
 sh ./scripts/utils/evaluation_code_generation.sh
 ~~~
-This stage executes the **contract-aware code generation and evaluation pipeline** using the CVTs generated in Step 1.  
-Each script performs the following functions:  
+This stage executes the **contract-aware code generation and evaluation pipeline** using the CVTs generated in Step 3.  
+The scripts perform the following functions:  
 - **Generation:** Produces code solutions under two prompting settings:
   - **Contract Specification (CS)** (baseline)
   - **Example-Augmented Specification (EAS)** (augmented with CVTs).  
-- **Evaluation:** Assesses generated code for both functionality and contract adherence using the proposed metrics: **AVC**, **AAR**, and **AAP**, which measure how effectively the model enforces and aligns with contracts.  
+- **Evaluation:** Assesses generated code for both functionality and contract adherence using the proposed metrics: **CSR** (Contract Satisfaction Rate), **CodeBLEU**, and **LLM-as-judge**, which measure how effectively the model enforces and aligns with contracts.  
 
 Each script in this stage supports **detailed configuration options** that can be adjusted within the corresponding shell files.
 
 
+<<<<<<< HEAD
 ## 🔖 Citation
 ```bibtex
 @misc{lim2025largelanguagemodelsrespect,
@@ -165,3 +171,5 @@ Each script in this stage supports **detailed configuration options** that can b
       url={https://arxiv.org/abs/2510.12047}, 
 }
 ```
+=======
+>>>>>>> 18c0ff31 (Update README.md and Code)
