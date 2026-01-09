@@ -157,8 +157,6 @@ The scripts perform the following functions:
 
 Each script in this stage supports **detailed configuration options** that can be adjusted within the corresponding shell files.
 
-
-<<<<<<< HEAD
 ## 🔖 Citation
 ```bibtex
 @misc{lim2025largelanguagemodelsrespect,
@@ -171,5 +169,3 @@ Each script in this stage supports **detailed configuration options** that can b
       url={https://arxiv.org/abs/2510.12047}, 
 }
 ```
-=======
->>>>>>> 18c0ff31 (Update README.md and Code)
