@@ -159,10 +159,10 @@ Each script in this stage supports **detailed configuration options** that can b
 
 ## 🔖 Citation
 ```bibtex
-@misc{lim2025largelanguagemodelsrespect,
+@misc{lim2026contractevalbenchmarkevaluatingcontractsatisfying,
       title={ContractEval: A Benchmark for Evaluating Contract-Satisfying Assertions in Code Generation}, 
       author={Soohan Lim and Joonghyuk Hahn and Hyunwoo Park and Sang-Ki Ko and Yo-Sub Han},
-      year={2025},
+      year={2026},
       eprint={2510.12047},
       archivePrefix={arXiv},
       primaryClass={cs.AI},
